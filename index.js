@@ -3,7 +3,8 @@ import http from 'http';
 import * as routes from './routes/index.js'
 import { authenticateToken } from './lib/jwt.js'
 
-const PORT = 8888;
+const DEFAULT_PORT = 8888
+const PORT = process.env.PORT || DEFAULT_PORT // Heroku assigns you a port
 
 const app = express();
 const server = http.createServer(app);
