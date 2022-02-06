@@ -16,7 +16,14 @@ function logHeaders(req, res, next) {
   next();
 }
 
+function randomDelay(min, random){
+  return ( req, res, next ) => {
+    setTimeout(next, Math.floor( ( Math.random() * random ) + min ) );
+  }
+}
+
 export {
   getPlayer,
+  randomDelay,
   logHeaders
 }

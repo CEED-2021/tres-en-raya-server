@@ -13,7 +13,7 @@ router.use(express.json({
     try {
       req.user = JSON.parse(buf);
     } catch(e) {
-      res.status(404).send('Invalid JSON');
+      res.status(400).send(error('Invalid JSON'));
       throw "Received invalid JSON"
     }
   }
