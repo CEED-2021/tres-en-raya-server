@@ -13,7 +13,9 @@ router.get('/player/:id', getPlayer, asyncRoute(async (req, res) => {
 
 router.get('/player/:id/games', getPlayer, asyncRoute(async (req, res) => {
   const playerGames = await games.getByPlayerId(req.player.id)
-  res.send(playerGames)
+  const gameIds = playerGames.map( game => game.id )
+
+  res.send(gameIds)
 }))
 
 export default router;

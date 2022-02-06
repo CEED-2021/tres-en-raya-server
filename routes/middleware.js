@@ -11,6 +11,12 @@ async function getPlayer(req, res, next) {
   next();
 }
 
+function logHeaders(req, res, next) {
+  console.log(JSON.stringify(req.headers));
+  next();
+}
+
 export {
-  getPlayer
+  getPlayer,
+  logHeaders
 }
