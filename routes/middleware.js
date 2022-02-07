@@ -7,7 +7,7 @@ async function getPlayer(req, res, next) {
 
   if(!player) return res.status(404).send(error('Unknown player'));
 
-  req.player = player
+  req.player = {...player}
   next();
 }
 

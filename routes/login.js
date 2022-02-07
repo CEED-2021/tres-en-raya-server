@@ -31,11 +31,9 @@ router.post('/login', checkJSONContent, asyncRoute(async (req, res) => {
   const player = await players.searchByUsername(req.user.username)
   if(player?.password !== req.user.password) return res.status(401).send(error('Invalid login'))
 
-  // create token
   const tokenData = {
     id: player.id
   }
-
   const token = generateAccessToken(tokenData)
 
   const response =  {
