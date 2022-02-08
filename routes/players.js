@@ -3,6 +3,7 @@ import express from 'express'
 import players from '../repositories/players_repository.js'
 import { asyncRoute, error } from '../lib/utils.js';
 import games from '../repositories/games_repository.js';
+import { checkSamePlayer } from './middleware.js';
 
 const router = express.Router();
 
@@ -16,12 +17,12 @@ async function getPlayer(req, res, next) {
   next();
 }
 
-router.get('/player/:id', getPlayer, asyncRoute(async (req, res) => {
+router.get('/player/:id', getPlayer, checkSamePlayer, asyncRoute(async (req, res) => {
   delete req.player.password
   res.send(req.player)
 }))
 
-router.get('/player/:id/games', getPlayer, asyncRoute(async (req, res) => {
+router.get('/player/:id/games', getPlayer, checkSamePlayer, asyncRoute(async (req, res) => {
   const playerGames = await games.getByPlayerId(req.player.id)
   const gameIds = playerGames.map( game => game.id )
 

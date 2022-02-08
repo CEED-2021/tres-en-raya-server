@@ -2,6 +2,7 @@ import express from 'express'
 import games from '../repositories/games_repository.js'
 import { asyncRoute, error } from '../lib/utils.js';
 import { enc, dec } from '../lib/crypt.js'
+import { checkSamePlayer } from './middleware.js';
 
 const router = express.Router();
 
@@ -20,12 +21,6 @@ async function getGame(req, res, next) {
   if(!game) return res.status(404).send(error('Unknown game'))
 
   req.game = game
-  next()
-}
-
-function checkSamePlayer(req, res, next) {
-  if(req.user.id !== req.game.player)
-    return res.status(403).send(error('Not authorized'))
   next()
 }
 
