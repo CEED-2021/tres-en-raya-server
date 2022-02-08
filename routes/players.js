@@ -1,10 +1,20 @@
 import express from 'express'
-import { asyncRoute } from '../lib/utils.js';
+
+import players from '../repositories/players_repository.js'
+import { asyncRoute, error } from '../lib/utils.js';
 import games from '../repositories/games_repository.js';
 
-import { getPlayer } from './middleware.js';
-
 const router = express.Router();
+
+async function getPlayer(req, res, next) {
+  const id = parseInt(req.params.id);
+  const player = await players.player(id)
+
+  if(!player) return res.status(404).send(error('Unknown player'));
+
+  req.player = {...player}
+  next();
+}
 
 router.get('/player/:id', getPlayer, asyncRoute(async (req, res) => {
   delete req.player.password

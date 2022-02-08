@@ -23,11 +23,17 @@ async function getGame(req, res, next) {
   next()
 }
 
+function checkSamePlayer(req, res, next) {
+  if(req.user.id !== req.game.player)
+    return res.status(403).send(error('Not authorized'))
+  next()
+}
+
 async function getMovementInfo(req, res, next) {
   const game = req.game
 
   try {
-    
+
     const movInfo = decodeMovement(req.params.movid)
 
     if(movInfo.game === undefined || movInfo.movement === undefined) throw "Invalid data"
@@ -44,7 +50,7 @@ async function getMovementInfo(req, res, next) {
   next()
 }
 
-router.get('/game/:id', getGame, asyncRoute(async (req, res) => {
+router.get('/game/:id', getGame, checkSamePlayer, asyncRoute(async (req, res) => {
   const game = { ...req.game }
 
   delete game.movements
@@ -53,7 +59,7 @@ router.get('/game/:id', getGame, asyncRoute(async (req, res) => {
   res.send(game)
 }))
 
-router.get('/game/:id/movements/:movid', getGame, getMovementInfo, asyncRoute(async (req, res) => {
+router.get('/game/:id/movements/:movid', getGame, checkSamePlayer, getMovementInfo, asyncRoute(async (req, res) => {
 
   const game = req.game
   const movInfo = req.movement
