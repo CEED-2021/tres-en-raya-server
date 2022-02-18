@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 router.use(express.json({
-  verify : (req, res, buf, encoding) => {
+  verify : (req, res, buf) => {
     try {
       req.user = JSON.parse(buf);
     } catch(e) {
@@ -28,11 +28,13 @@ function checkJSONContent(req, res, next) {
 
 router.post('/login', checkJSONContent, asyncRoute(async (req, res) => {
 
+  if(!req?.user?.username || !req?.user?.password) return res.status(400).send(error('Invalid request'))
+
   const player = await players.searchByUsername(req.user.username)
   if(player?.password !== req.user.password) return res.status(401).send(error('Invalid login'))
 
   const tokenData = {
-    id: player.id
+    id: player?.id
   }
   const token = generateAccessToken(tokenData)
 
